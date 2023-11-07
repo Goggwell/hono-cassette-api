@@ -9,7 +9,16 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230419.0",
+    "dotenv": "^16.3.1",
+    "drizzle-kit": "^0.19.13",
+    "postgres": "^3.4.3",
+    "tsx": "^3.14.0",
     "typescript": "^5.0.4",
     "wrangler": "^3.0.0"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.6.0",
+    "drizzle-orm": "^0.28.6",
+    "hono": "^3.9.2"
   }
 }
