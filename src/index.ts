@@ -1,6 +1,5 @@
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
-import { beasts } from './db/schema';
 import { Hono } from 'hono';
 import { cache } from 'hono/cache';
 import { cacheData, getCachedData } from './utils';
@@ -40,11 +39,6 @@ app.get('/', async (c) => {
 });
 
 app.get('/update', async (c) => {
-	// const client = new Pool({ connectionString: c.env.DATABASE_URL });
-	// const db = drizzle(client);
-	// const response = await db.select().from(beasts);
-	// console.log('response');
-	// await c.env.hcbkv.put('BEASTS', JSON.stringify(response)).then(() => console.log('works!'));
 	try {
 		const client = new Pool({ connectionString: c.env.DATABASE_URL });
 		const db = drizzle(client);
