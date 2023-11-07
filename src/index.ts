@@ -2,12 +2,22 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import { beasts } from './db/schema';
 import { Hono } from 'hono';
+import { cache } from 'hono/cache';
 
 export type Env = {
 	DATABASE_URL: string;
 };
 
 const app = new Hono<{ Bindings: Env }>();
+
+app.get(
+	'*',
+	cache({
+		cacheName: 'hono-cassette-api',
+		wait: true,
+		cacheControl: 'max-age=3600, s-maxage=3600, stale-while-revalidate=60, stale-if-error=86400',
+	})
+);
 
 app.get('/', async (c) => {
 	try {
