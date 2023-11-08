@@ -1,5 +1,7 @@
+import { eq } from 'drizzle-orm';
 import { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { beasts } from './db/schema';
+import { Monster } from './types';
 
 export async function cacheData(db: NeonDatabase<Record<string, never>>, namespace: KVNamespace) {
 	const response = await db.select().from(beasts);
@@ -13,6 +15,12 @@ export async function getCachedData(namespace: KVNamespace) {
 }
 
 export async function getPaginatedCachedData(namespace: KVNamespace, offset: number, limit: number) {
-	const data = await getCachedData(namespace);
+	const data: Monster[] = await getCachedData(namespace);
 	return data.slice(offset, limit + offset);
+}
+
+export async function getMonsterByName(namespace: KVNamespace, name: string) {
+	const data: Monster[] = await getCachedData(namespace);
+	const parsedName = name.toLowerCase();
+	return data.filter((monster) => monster.name!.indexOf(parsedName) > -1);
 }

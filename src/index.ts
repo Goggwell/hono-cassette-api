@@ -2,7 +2,8 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import { Hono } from 'hono';
 import { cache } from 'hono/cache';
-import { cacheData, getCachedData, getPaginatedCachedData } from './utils';
+import { cacheData, getCachedData, getPaginatedCachedData, getMonsterByName } from './utils';
+import { Monster } from './types';
 
 export type Env = {
 	DATABASE_URL: string;
@@ -22,7 +23,7 @@ app.get(
 
 app.get('/', async (c) => {
 	try {
-		const data = await getCachedData(c.env.hcbkv);
+		const data: Monster[] = await getCachedData(c.env.hcbkv);
 
 		return c.json({
 			data,
@@ -40,7 +41,7 @@ app.get('/', async (c) => {
 
 app.get('/api', async (c) => {
 	try {
-		const data = await getCachedData(c.env.hcbkv);
+		const data: Monster[] = await getCachedData(c.env.hcbkv);
 
 		return c.json({
 			data,
@@ -59,10 +60,29 @@ app.get('/api', async (c) => {
 app.get('/paginate', async (c) => {
 	try {
 		const { offset, limit } = c.req.query();
-		const paginatedData = await getPaginatedCachedData(c.env.hcbkv, parseInt(offset), parseInt(limit));
+		const paginatedData: Monster[] = await getPaginatedCachedData(c.env.hcbkv, parseInt(offset), parseInt(limit));
 
 		return c.json({
 			paginatedData,
+		});
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				error,
+			},
+			400
+		);
+	}
+});
+
+app.get('/name', async (c) => {
+	try {
+		const { name } = c.req.query();
+		const result: Monster[] = await getMonsterByName(c.env.hcbkv, name);
+
+		return c.json({
+			result,
 		});
 	} catch (error) {
 		console.error(error);
