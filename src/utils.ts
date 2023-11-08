@@ -24,3 +24,9 @@ export async function getMonsterByName(namespace: KVNamespace, name: string) {
 	const parsedName = name.toLowerCase();
 	return data.filter((monster) => monster.name!.indexOf(parsedName) > -1);
 }
+
+export async function filterMonstersByType(namespace: KVNamespace, type: string) {
+	const data: Monster[] = await getCachedData(namespace);
+	const parsedType = type.toLowerCase();
+	return data.filter((monster) => monster.type!.indexOf(parsedType) > -1);
+}

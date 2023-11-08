@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import { Hono } from 'hono';
 import { cache } from 'hono/cache';
-import { cacheData, getCachedData, getPaginatedCachedData, getMonsterByName } from './utils';
+import { cacheData, getCachedData, getPaginatedCachedData, getMonsterByName, filterMonstersByType } from './utils';
 import { Monster } from './types';
 
 export type Env = {
@@ -80,6 +80,25 @@ app.get('/name', async (c) => {
 	try {
 		const { name } = c.req.query();
 		const result: Monster[] = await getMonsterByName(c.env.hcbkv, name);
+
+		return c.json({
+			result,
+		});
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				error,
+			},
+			400
+		);
+	}
+});
+
+app.get('/type', async (c) => {
+	try {
+		const { type } = c.req.query();
+		const result: Monster[] = await filterMonstersByType(c.env.hcbkv, type);
 
 		return c.json({
 			result,
