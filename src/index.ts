@@ -2,7 +2,7 @@ import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import { Hono } from 'hono';
 import { cache } from 'hono/cache';
-import { cacheData, getCachedData } from './utils';
+import { cacheData, getCachedData, getPaginatedCachedData } from './utils';
 
 export type Env = {
 	DATABASE_URL: string;
@@ -26,6 +26,43 @@ app.get('/', async (c) => {
 
 		return c.json({
 			data,
+		});
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				error,
+			},
+			400
+		);
+	}
+});
+
+app.get('/api', async (c) => {
+	try {
+		const data = await getCachedData(c.env.hcbkv);
+
+		return c.json({
+			data,
+		});
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				error,
+			},
+			400
+		);
+	}
+});
+
+app.get('/paginate', async (c) => {
+	try {
+		const { offset, limit } = c.req.query();
+		const paginatedData = await getPaginatedCachedData(c.env.hcbkv, parseInt(offset), parseInt(limit));
+
+		return c.json({
+			paginatedData,
 		});
 	} catch (error) {
 		console.error(error);

@@ -11,3 +11,8 @@ export async function getCachedData(namespace: KVNamespace) {
 	if (!response) return new Response("Couldn't get data", { status: 404 });
 	return JSON.parse(response);
 }
+
+export async function getPaginatedCachedData(namespace: KVNamespace, offset: number, limit: number) {
+	const data = await getCachedData(namespace);
+	return data.slice(offset, limit + offset);
+}
