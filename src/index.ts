@@ -111,4 +111,18 @@ app.get('/update', async (c) => {
 	}
 });
 
+app.get('/health', async (c) => {
+	try {
+		return c.text('Healthy!');
+	} catch (error) {
+		console.error(error, 'Unhealthy...');
+		return c.json(
+			{
+				error,
+			},
+			400
+		);
+	}
+});
+
 export default app;
