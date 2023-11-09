@@ -1,6 +1,7 @@
 import { drizzle } from 'drizzle-orm/neon-serverless';
 import { Pool } from '@neondatabase/serverless';
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { cache } from 'hono/cache';
 import { cacheData, getCachedData, getPaginatedCachedData, getMonsterByName, filterMonstersByType } from './utils';
 import { Monster } from './types';
@@ -11,6 +12,15 @@ export type Env = {
 };
 
 const app = new Hono<{ Bindings: Env }>();
+
+app.use(
+	'/*',
+	cors({
+		origin: '*',
+		allowMethods: ['POST', 'GET', 'OPTIONS', 'HEAD'],
+		maxAge: 3600,
+	})
+);
 
 app.get(
 	'*',
