@@ -7,7 +7,7 @@ import { cacheData, getCachedData, getPaginatedCachedData, getMonsterByName, fil
 import { Monster } from './types';
 
 export type Env = {
-	DATABASE_URL: string;
+	BEASTS_TABLE_URL: string;
 	compendium: KVNamespace;
 };
 
@@ -33,7 +33,7 @@ app.get(
 
 app.get('/', async (c) => {
 	try {
-		const data: Monster[] = await getCachedData(c.env.hcbkv);
+		const data: Monster[] = await getCachedData(c.env.compendium);
 
 		return c.json({
 			data,
@@ -51,7 +51,7 @@ app.get('/', async (c) => {
 
 app.get('/api', async (c) => {
 	try {
-		const data: Monster[] = await getCachedData(c.env.hcbkv);
+		const data: Monster[] = await getCachedData(c.env.compendium);
 
 		return c.json({
 			data,
@@ -70,7 +70,7 @@ app.get('/api', async (c) => {
 app.get('/paginate', async (c) => {
 	try {
 		const { offset, limit } = c.req.query();
-		const paginatedData: Monster[] = await getPaginatedCachedData(c.env.hcbkv, parseInt(offset), parseInt(limit));
+		const paginatedData: Monster[] = await getPaginatedCachedData(c.env.compendium, parseInt(offset), parseInt(limit));
 
 		return c.json({
 			paginatedData,
@@ -89,7 +89,7 @@ app.get('/paginate', async (c) => {
 app.get('/name', async (c) => {
 	try {
 		const { name } = c.req.query();
-		const result: Monster[] = await getMonsterByName(c.env.hcbkv, name);
+		const result: Monster[] = await getMonsterByName(c.env.compendium, name);
 
 		return c.json({
 			result,
@@ -108,7 +108,7 @@ app.get('/name', async (c) => {
 app.get('/type', async (c) => {
 	try {
 		const { type } = c.req.query();
-		const result: Monster[] = await filterMonstersByType(c.env.hcbkv, type);
+		const result: Monster[] = await filterMonstersByType(c.env.compendium, type);
 
 		return c.json({
 			result,
@@ -126,9 +126,9 @@ app.get('/type', async (c) => {
 
 app.get('/update', async (c) => {
 	try {
-		const client = new Pool({ connectionString: c.env.DATABASE_URL });
+		const client = new Pool({ connectionString: c.env.BEASTS_TABLE_URL });
 		const db = drizzle(client);
-		return await cacheData(db, c.env.hcbkv);
+		return await cacheData(db, c.env.compendium);
 	} catch (error) {
 		console.error(error);
 		return c.json(
