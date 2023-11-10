@@ -8,7 +8,7 @@ import { Monster } from './types';
 
 export type Env = {
 	DATABASE_URL: string;
-	hcbkv: KVNamespace;
+	compendium: KVNamespace;
 };
 
 const app = new Hono<{ Bindings: Env }>();

@@ -21,6 +21,7 @@ export type BaseStats = {
 export type Images = {
 	standard: string | null;
 	animated: string | null;
+	sticker: string | null;
 };
 
 export type Monster = {
@@ -33,4 +34,5 @@ export type Monster = {
 	base_stats: BaseStats | null;
 	description: string | null;
 	images: Images | null;
+	cry: string | null;
 };

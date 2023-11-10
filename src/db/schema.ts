@@ -10,4 +10,5 @@ export const beasts = pgTable('beasts', {
 	base_stats: json('base_stats'),
 	description: text('description'),
 	images: json('images'),
+	cry: text('cry'),
 });

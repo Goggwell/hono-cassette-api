@@ -3,5 +3,5 @@ main = "src/index.ts"
 compatibility_date = "2023-10-30"
 
 kv_namespaces = [
-    { binding = "hcbkv", id = "bf6fe90c30624689853728b345d697f5" }
+    { binding = "compendium", id = "a45ce44c0e29449788477885b87370bf" }
 ]
