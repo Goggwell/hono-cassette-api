@@ -91,44 +91,6 @@ app.get('/api', async (c) => {
 	}
 });
 
-app.get('/paginate', async (c) => {
-	try {
-		const { offset, limit } = c.req.query();
-		const paginatedData: Monster[] = await getPaginatedCachedData(c.env.compendium, parseInt(offset), parseInt(limit));
-
-		return c.json({
-			paginatedData,
-		});
-	} catch (error) {
-		console.error(error);
-		return c.json(
-			{
-				error,
-			},
-			400
-		);
-	}
-});
-
-app.get('/name', async (c) => {
-	try {
-		const { name } = c.req.query();
-		const result: Monster[] = await getMonsterByName(c.env.compendium, name);
-
-		return c.json({
-			result,
-		});
-	} catch (error) {
-		console.error(error);
-		return c.json(
-			{
-				error,
-			},
-			400
-		);
-	}
-});
-
 app.get('/type', async (c) => {
 	try {
 		const { type } = c.req.query();
