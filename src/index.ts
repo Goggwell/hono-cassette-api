@@ -33,7 +33,31 @@ app.get(
 
 app.get('/', async (c) => {
 	try {
-		const data: Monster[] = await getCachedData(c.env.compendium);
+		const { offset, limit } = c.req.query();
+		const data: Monster[] = await getPaginatedCachedData(c.env.compendium, offset ? parseInt(offset) : 0, limit ? parseInt(limit) : 12);
+
+		return c.json({
+			data,
+		});
+	} catch (error) {
+		console.error(error);
+		return c.json(
+			{
+				error,
+			},
+			400
+		);
+	}
+});
+
+app.get('/:name', async (c) => {
+	try {
+		const name = c.req.param('name');
+		const { offset, limit } = c.req.query();
+		const offsetParam = offset ? parseInt(offset) : 0;
+		const limitParam = limit ? parseInt(limit) : 12;
+		const initData: Monster[] = await getMonsterByName(c.env.compendium, name);
+		const data = initData.slice(offsetParam, limitParam + offsetParam);
 
 		return c.json({
 			data,
