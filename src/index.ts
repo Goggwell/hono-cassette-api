@@ -50,14 +50,9 @@ app.get('/', async (c) => {
 	}
 });
 
-app.get('/:name', async (c) => {
+app.get('/api', async (c) => {
 	try {
-		const name = c.req.param('name');
-		const { offset, limit } = c.req.query();
-		const offsetParam = offset ? parseInt(offset) : 0;
-		const limitParam = limit ? parseInt(limit) : 12;
-		const initData: Monster[] = await getMonsterByName(c.env.compendium, name);
-		const data = initData.slice(offsetParam, limitParam + offsetParam);
+		const data: Monster[] = await getCachedData(c.env.compendium);
 
 		return c.json({
 			data,
@@ -73,9 +68,14 @@ app.get('/:name', async (c) => {
 	}
 });
 
-app.get('/api', async (c) => {
+app.get('/api/:name', async (c) => {
 	try {
-		const data: Monster[] = await getCachedData(c.env.compendium);
+		const name = c.req.param('name');
+		const { offset, limit } = c.req.query();
+		const offsetParam = offset ? parseInt(offset) : 0;
+		const limitParam = limit ? parseInt(limit) : 12;
+		const initData: Monster[] = await getMonsterByName(c.env.compendium, name);
+		const data = initData.slice(offsetParam, limitParam + offsetParam);
 
 		return c.json({
 			data,
